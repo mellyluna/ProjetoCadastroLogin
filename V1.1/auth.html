@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Autenticação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #2d1b69 50%, #8B008B 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 0, 139, 0.3);
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 60px rgba(139, 0, 139, 0.2);
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 0, 139, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .login-side {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        .login-title {
+            color: #FFFFFF;
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-subtitle {
+            color: #8B008B;
+            font-size: 0.9em;
+            font-weight: 300;
+        }
+
+        .login-form {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: end;
+        }
+
+        .form-group {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-label {
+            display: block;
+            color: #FFFFFF;
+            font-size: 0.8em;
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(139, 0, 139, 0.3);
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #8B008B;
+            box-shadow: 0 0 15px rgba(139, 0, 139, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .button-group {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            align-items: center;
+        }
+
+        .login-button {
+            flex: 1;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #FF0000 0%, #8B008B 100%);
+            border: none;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 0.9em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .login-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .secondary-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(139, 0, 139, 0.3);
+            gap: 20px;
+        }
+
+        .forgot-password a {
+            color: #8B008B;
+            text-decoration: none;
+            font-size: 1em;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #FF0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .register-section {
+            text-align: center;
+        }
+
+        .register-text {
+            color: #FFFFFF;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .register-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #8B008B 0%, #FF0000 100%);
+            border: none;
+            border-radius: 12px;
+            color: #FFFFFF;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(139, 0, 139, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .register-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .register-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 30px rgba(139, 0, 139, 0.4);
+        }
+
+        .register-button:active {
+            transform: translateY(0);
+        }
+
+        .decorative-circles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(139, 0, 139, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 15%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .circle:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 70%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .circle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            bottom: 15%;
+            left: 60%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .feedback-message {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .feedback-success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #00FF00;
+        }
+
+        .feedback-error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #FF6B6B;
+        }
+
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.8em;
+            z-index: 1000;
+            display: none;
+        }
+
+        .connection-status.online {
+            border: 1px solid rgba(0, 255, 0, 0.5);
+            color: #00FF00;
+        }
+
+        .connection-status.offline {
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            color: #FF6B6B;
+        }
+
+        @media (max-width: 1200px) {
+            .login-container {
+                padding: 35px 50px;
+                max-width: 700px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .login-container {
+                padding: 30px 40px;
+                margin: 20px;
+                max-width: 600px;
+                min-height: 350px;
+            }
+            
+            .login-side {
+                max-width: 100%;
+            }
+            
+            .login-title {
+                font-size: 1.6em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 25px 20px;
+                margin: 15px;
+                max-width: 500px;
+                min-height: 400px;
+            }
+            
+            .login-title {
+                font-size: 1.5em;
+            }
+
+            .login-form {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .secondary-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-status" id="connectionStatus">
+        Verificando conexão...
+    </div>
+
+    <div class="login-container">
+        <div class="decorative-circles">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+        
+        <div class="login-side">
+            <div class="login-header">
+                <h1 class="login-title">LOGIN</h1>
+                <p class="login-subtitle">Acesse sua conta</p>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username" class="form-label">Usuário</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-input" 
+                        placeholder="Digite seu usuário"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Senha</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Digite sua senha"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="login-button" id="loginButton">
+                        Entrar
+                    </button>
+                </div>
+                
+                <div id="feedbackMessage" class="feedback-message"></div>
+            </form>
+            
+            <div class="secondary-actions">
+                <div class="forgot-password">
+                    <a href="#" onclick="showForgotPassword(); return false;">Esqueceu sua senha?</a>
+                </div>
+
+                <div class="register-section">
+                    <p class="register-text">Não tem conta?</p>
+                    <a href="cadastro.html" class="register-button">Cadastre-se</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais para controle
+        let isServerOnline = false;
+        let serverCheckInterval;
+
+        // Função para criar timeout manual para fetch
+        function fetchWithTimeout(url, options = {}, timeout = 5000) {
+            return new Promise((resolve, reject) => {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => {
+                    controller.abort();
+                    reject(new Error('Timeout na requisição'));
+                }, timeout);
+
+                fetch(url, { ...options, signal: controller.signal })
+                    .then(response => {
+                        clearTimeout(timeoutId);
+                        resolve(response);
+                    })
+                    .catch(error => {
+                        clearTimeout(timeoutId);
+                        reject(error);
+                    });
+            });
+        }
+
+        // Função para verificar se o servidor está online
+        async function checkServerStatus() {
+            try {
+                console.log('Verificando status do servidor...');
+                
+                // Tentar endpoints diferentes para verificar conectividade
+                const endpoints = ['/check_db', '/api/health', '/'];
+                
+                for (const endpoint of endpoints) {
+                    try {
+                        const response = await fetchWithTimeout(endpoint, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            }
+                        }, 3000);
+
+                        console.log(`Endpoint ${endpoint} - Status: ${response.status}`);
+                        
+                        if (response.ok || response.status === 404) {
+                            isServerOnline = true;
+                            updateConnectionStatus('online', 'Servidor Online');
+                            console.log('Servidor está online!');
+                            return true;
+                        }
+                    } catch (error) {
+                        console.log(`Erro no endpoint ${endpoint}:`, error.message);
+                        continue;
+                    }
+                }
+                
+                throw new Error('Todos os endpoints falharam');
+                
+            } catch (error) {
+                isServerOnline = false;
+                updateConnectionStatus('offline', 'Servidor Offline');
+                console.error('Erro ao verificar servidor:', error.message);
+                return false;
+            }
+        }
+
+        // Função para atualizar o status da conexão
+        function updateConnectionStatus(status, message) {
+            const statusElement = document.getElementById('connectionStatus');
+            statusElement.className = `connection-status ${status}`;
+            statusElement.textContent = message;
+            statusElement.style.display = 'block';
+            
+            // Esconder após 3 segundos se estiver online
+            if (status === 'online') {
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Função para exibir feedback
+        function showFeedback(message, type = 'error') {
+            const feedbackElement = document.getElementById('feedbackMessage');
+            feedbackElement.textContent = message;
+            feedbackElement.className = `feedback-message feedback-${type}`;
+            feedbackElement.style.display = 'block';
+            
+            // Ocultar após 8 segundos
+            setTimeout(() => {
+                feedbackElement.style.display = 'none';
+            }, 8000);
+        }
+
+        // Função para resetar o botão
+        function resetLoginButton() {
+            const button = document.getElementById('loginButton');
+            button.innerHTML = 'Entrar';
+            button.disabled = false;
+        }
+
+        // Função para o link "Esqueceu sua senha?"
+        function showForgotPassword() {
+            showFeedback('Funcionalidade em desenvolvimento. Entre em contato com o administrador.', 'error');
+        }
+
+        // Função para fazer login com retry
+        async function attemptLogin(username, password, retryCount = 0) {
+            const maxRetries = 2;
+            
+            try {
+                console.log(`Tentativa de login ${retryCount + 1} para usuário: ${username}`);
+                
+                const response = await fetchWithTimeout('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        username: username, 
+                        password: password 
+                    })
+                }, 10000);
+
+                console.log('Resposta recebida:', response.status);
+
+                // Verificar se a resposta é JSON válida
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const textResponse = await response.text();
+                    console.error('Resposta não-JSON recebida:', textResponse);
+                    throw new Error('Resposta do servidor não é JSON válida');
+                }
+
+                const data = await response.json();
+                console.log('Dados recebidos:', data);
+
+                if (response.ok && data.success) {
+                    showFeedback('Login realizado com sucesso!', 'success');
+                    
+                    // Salvar usuário no localStorage
+                    localStorage.setItem('currentUser', username);
+                    
+                    // Redirecionar após pequeno delay
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url || `/user/${username}`;
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Erro ao fazer login');
+                }
+
+            } catch (error) {
+                console.error('Erro na tentativa de login:', error.message);
+                
+                // Tentar novamente se não excedeu o limite
+                if (retryCount < maxRetries) {
+                    console.log(`Tentando novamente... (${retryCount + 1}/${maxRetries})`);
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    return attemptLogin(username, password, retryCount + 1);
+                } else {
+                    // Verificar status do servidor novamente
+                    await checkServerStatus();
+                    
+                    if (error.message.includes('Timeout') || error.message.includes('Failed to fetch')) {
+                        showFeedback('Erro de conexão. Verifique se o servidor Flask está rodando em http://localhost:5000', 'error');
+                    } else if (error.message.includes('JSON')) {
+                        showFeedback('Erro na comunicação com o servidor. Verifique os logs do servidor.', 'error');
+                    } else {
+                        showFeedback(error.message || 'Erro desconhecido ao fazer login', 'error');
+                    }
+                    resetLoginButton();
+                }
+            }
+        }
+
+        // Event listener para o formulário
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Validações básicas
+            if (!username || !password) {
+                showFeedback('Por favor, preencha todos os campos!', 'error');
+                return;
+            }
+
+            if (username.length < 3) {
+                showFeedback('Nome de usuário deve ter pelo menos 3 caracteres!', 'error');
+                return;
+            }
+
+            if (password.length < 4) {
+                showFeedback('Senha deve ter pelo menos 4 caracteres!', 'error');
+                return;
+            }
+
+            // Desabilitar botão e mostrar loading
+            const button = document.getElementById('loginButton');
+            button.innerHTML = 'Conectando...';
+            button.disabled = true;
+
+            // Tentar fazer login
+            await attemptLogin(username, password);
+        });
+
+        // Efeito visual nos inputs
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Adicionar suporte para Enter nos campos
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                }
+            });
+        });
+
+        // Inicialização quando a página carrega
+        window.addEventListener('load', function() {
+            console.log('Página carregada, verificando servidor...');
+            
+            // Verificar status do servidor
+            checkServerStatus();
+            
+            // Configurar verificação periódica do servidor
+            serverCheckInterval = setInterval(checkServerStatus, 30000);
+
+            // Verificar se existe usuário logado
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                console.log('Usuário logado encontrado:', currentUser);
+                showFeedback(`Bem-vindo de volta, ${currentUser}!`, 'success');
+            }
+        });
+
+        // Limpar interval quando a página é fechada
+        window.addEventListener('beforeunload', function() {
+            if (serverCheckInterval) {
+                clearInterval(serverCheckInterval);
+            }
+        });
+
+        // Tratamento de erros globais
+        window.addEventListener('error', function(e) {
+            console.error('Erro global capturado:', e.error);
+            showFeedback('Erro inesperado. Tente recarregar a página.', 'error');
+        });
+
+        // Função para teste rápido (desenvolvimento)
+        function testConnection() {
+            console.log('Testando conexão manualmente...');
+            checkServerStatus();
+        }
+
+        // Função para testar login com usuário padrão
+        function testLogin() {
+            document.getElementById('username').value = 'admin';
+            document.getElementById('password').value = '1234';
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        }
+
+        // Expor funções para console (debug)
+        window.testConnection = testConnection;
+        window.testLogin = testLogin;
+        
+        console.log('Página de login carregada. Use testConnection() ou testLogin() no console para debug.');
+    </script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Login - Página Principal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #2d1b69 50%, #8B008B 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .welcome-container {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 0, 139, 0.3);
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 60px rgba(139, 0, 139, 0.2);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 0, 139, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-title {
+            color: #FFFFFF;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .welcome-subtitle {
+            color: #8B008B;
+            font-size: 1.2em;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #81c784;
+            font-size: 1.1em;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(139, 0, 139, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #FFFFFF;
+        }
+
+        .user-info h3 {
+            color: #8B008B;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .user-info p {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #FF0000 0%, #8B008B 100%);
+            color: #FFFFFF;
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.4);
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #8B008B 0%, #FF0000 100%);
+            color: #FFFFFF;
+            box-shadow: 0 8px 25px rgba(139, 0, 139, 0.3);
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(139, 0, 139, 0.4);
+        }
+
+        .system-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            border-radius: 10px;
+            color: #ffc107;
+            font-size: 0.9em;
+        }
+
+        .decorative-circles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(139, 0, 139, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .circle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @media (max-width: 768px) {
+            .welcome-container {
+                padding: 30px 20px;
+                margin: 15px;
+            }
+            
+            .welcome-title {
+                font-size: 2em;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-button {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="decorative-circles">
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+        
+        <div class="content">
+            <h1 class="welcome-title">🎉 Bem-vindo!</h1>
+            <p class="welcome-subtitle">Login realizado com sucesso</p>
+            
+            <div class="success-message">
+                ✅ Você está autenticado no sistema
+            </div>
+            
+            <div class="user-info">
+                <h3>📋 Informações da Sessão</h3>
+                <p><strong>Status:</strong> Conectado</p>
+                <p><strong>Horário de Login:</strong> <span id="loginTime"></span></p>
+                <p><strong>Usuário:</strong> <span id="currentUser">Carregando...</span></p>
+            </div>
+            
+            <div class="actions">
+                <button class="action-button logout-btn" onclick="logout()">
+                    🚪 Sair
+                </button>
+                <a href="cadastro.html" class="action-button register-btn">
+                    👥 Cadastrar Novo Usuário
+                </a>
+            </div>
+            
+            <div class="system-info">
+                <strong>ℹ️ Sistema de Autenticação</strong><br>
+                Desenvolvido com Flask + SQLite<br>
+                Senhas criptografadas com SHA-256
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Exibir horário de login
+        document.getElementById('loginTime').textContent = new Date().toLocaleString('pt-BR');
+        
+        // Tentar recuperar o nome do usuário do localStorage (se implementado)
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            document.getElementById('currentUser').textContent = savedUser;
+        } else {
+            document.getElementById('currentUser').textContent = 'Usuário logado';
+        }
+        
+        // Função de logout
+        function logout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                // Limpar dados de sessão
+                localStorage.removeItem('currentUser');
+                
+                // Redirecionar para página de login
+                window.location.href = 'auth.html';
+            }
+        }
+        
+        // Verificar se o usuário realmente fez login (opcional)
+        // Em uma implementação real, você poderia verificar um token ou sessão
+        
+        // Efeito de entrada suave
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.welcome-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.8s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

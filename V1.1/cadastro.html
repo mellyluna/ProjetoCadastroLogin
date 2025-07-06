@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuários</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(45, 45, 45, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffffff;
+            font-size: 2.2em;
+            font-weight: 300;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cccccc;
+            font-weight: 500;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #666666;
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        input::placeholder {
+            color: #888888;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #333333 0%, #555555 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #555555 0%, #777777 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #81c784;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .message.error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #e57373;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .security-note {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 10px;
+            color: #ffc107;
+            font-size: 0.85em;
+            text-align: center;
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="icon">🔐</span>Cadastro de Usuários</h1>
+        
+        <form id="passwordForm">
+            <div class="form-group">
+                <label for="username">
+                    <span class="icon">👤</span>Nome de Usuário
+                </label>
+                <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">
+                    <span class="icon">🔑</span>Senha
+                </label>
+                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <span class="icon">💾</span>Salvar Senha
+            </button>
+        </form>
+        
+        <div id="message" class="message"></div>
+        
+        <div class="security-note">
+            <span class="icon">⚠️</span>
+            Suas senhas são armazenadas de forma segura no banco de dados local.
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
+            
+            try {
+                const response = await fetch('http://localhost:5000/save_password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    messageDiv.textContent = '✅ ' + result.message;
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+                    
+                    // Limpar formulário
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    // Esconder mensagem após 5 segundos
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, 5000);
+                } else {
+                    messageDiv.textContent = '❌ ' + result.error;
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                messageDiv.textContent = '❌ Erro ao conectar com o servidor';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
