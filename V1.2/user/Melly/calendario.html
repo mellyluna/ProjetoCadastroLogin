@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Lunar - Grimório de Melly</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Cinzel:wght@400;600&family=Nosifer&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a0d1a 0%, #2d1b2d 30%, #0d0d0d 100%);
+            min-height: 100vh;
+            font-family: 'Cinzel', serif;
+            color: #e6e6e6;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom: 2px solid #8B0000;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-family: 'Nosifer', cursive;
+            font-size: 2.5rem;
+            color: #8B0000;
+            text-shadow: 0 0 20px #8B0000;
+            margin-bottom: 0.5rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #8B0000, 0 0 40px #8B0000; }
+            to { text-shadow: 0 0 30px #8B0000, 0 0 60px #8B0000; }
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #9932CC;
+            font-weight: 600;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(145deg, #8B0000, #660000);
+            color: #e6e6e6;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.5);
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Informações da Lua Atual */
+        .moon-info {
+            text-align: center;
+            background: linear-gradient(145deg, #1a0d1a, #2d1b2d);
+            border: 2px solid #8B0000;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+        }
+        
+        .moon-phase {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .moon-info h2 {
+            color: #9932CC;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .moon-info p {
+            color: #e6e6e6;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        /* Calendário */
+        .calendar-container {
+            background: linear-gradient(145deg, #1a0d1a, #2d1b2d);
+            border: 2px solid #8B0000;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .calendar-nav {
+            background: linear-gradient(145deg, #8B0000, #660000);
+            color: #e6e6e6;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            transition: all 0.3s ease;
+        }
+        
+        .calendar-nav:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.5);
+        }
+        
+        .calendar-title {
+            color: #9932CC;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #8B0000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .calendar-day-header {
+            background: linear-gradient(145deg, #2d1b2d, #1a0d1a);
+            color: #9932CC;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .calendar-day {
+            background: linear-gradient(145deg, #1a0d1a, #2d1b2d);
+            color: #e6e6e6;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .calendar-day:hover {
+            background: linear-gradient(145deg, #2d1b2d, #3d2b3d);
+            transform: scale(1.05);
+        }
+        
+        .calendar-day.other-month {
+            opacity: 0.3;
+        }
+        
+        .calendar-day.today {
+            background: linear-gradient(145deg, #8B0000, #660000);
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .calendar-day.moon-day {
+            background: linear-gradient(145deg, #4B0082, #6A0DAD);
+            color: #fff;
+        }
+        
+        .moon-symbol {
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+        }
+        
+        /* Fases da Lua */
+        .moon-phases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .phase-card {
+            background: linear-gradient(145deg, #1a0d1a, #2d1b2d);
+            border: 2px solid #8B0000;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.5);
+            border-color: #9932CC;
+        }
+        
+        .phase-card h3 {
+            color: #9932CC;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .phase-card .phase-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .phase-card .phase-date {
+            color: #e6e6e6;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .phase-card .phase-description {
+            color: #ccc;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .back-btn {
+                position: static;
+                transform: none;
+                margin-bottom: 1rem;
+            }
+            
+            .calendar-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .calendar-day {
+                min-height: 50px;
+                padding: 0.5rem;
+            }
+            
+            .moon-phase {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="back-btn" onclick="goBackToUserDashboard()">← Voltar</button>
+        <h1>🌙 Calendário Lunar</h1>
+        <p>Acompanhe os ciclos celestiais e planeje seus rituais</p>
+    </header>
+    
+    <div class="container">
+        <div class="moon-info">
+            <div class="moon-phase" id="currentMoonPhase">🌕</div>
+            <h2 id="currentPhaseName">Lua Cheia</h2>
+            <p id="currentPhaseDescription">A lua está em sua forma mais poderosa. Ideal para rituais de manifestação, proteção e purificação.</p>
+        </div>
+        
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button class="calendar-nav" onclick="previousMonth()">← Anterior</button>
+                <h2 class="calendar-title" id="calendarTitle">Janeiro 2025</h2>
+                <button class="calendar-nav" onclick="nextMonth()">Próximo →</button>
+            </div>
+            
+            <div class="calendar-grid" id="calendarGrid">
+                <div class="calendar-day-header">Dom</div>
+                <div class="calendar-day-header">Seg</div>
+                <div class="calendar-day-header">Ter</div>
+                <div class="calendar-day-header">Qua</div>
+                <div class="calendar-day-header">Qui</div>
+                <div class="calendar-day-header">Sex</div>
+                <div class="calendar-day-header">Sáb</div>
+            </div>
+        </div>
+        
+        <div class="moon-phases">
+            <div class="phase-card">
+                <div class="phase-emoji">🌑</div>
+                <h3>Lua Nova</h3>
+                <div class="phase-date" id="newMoonDate">15 Jan</div>
+                <div class="phase-description">Novos começos, intenções e plantio de sementes espirituais.</div>
+            </div>
+            
+            <div class="phase-card">
+                <div class="phase-emoji">🌓</div>
+                <h3>Lua Crescente</h3>
+                <div class="phase-date" id="waxingMoonDate">22 Jan</div>
+                <div class="phase-description">Crescimento, construção e fortalecimento de projetos.</div>
+            </div>
+            
+            <div class="phase-card">
+                <div class="phase-emoji">🌕</div>
+                <h3>Lua Cheia</h3>
+                <div class="phase-date" id="fullMoonDate">29 Jan</div>
+                <div class="phase-description">Plenitude, manifestação e rituais de poder máximo.</div>
+            </div>
+            
+            <div class="phase-card">
+                <div class="phase-emoji">🌗</div>
+                <h3>Lua Minguante</h3>
+                <div class="phase-date" id="waningMoonDate">06 Fev</div>
+                <div class="phase-description">Liberação, limpeza e banimento de energias negativas.</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        
+        const months = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+        
+        const moonPhases = [
+            { emoji: '🌑', name: 'Lua Nova', description: 'Novos começos, intenções e plantio de sementes espirituais.' },
+            { emoji: '🌒', name: 'Lua Crescente Inicial', description: 'Primeiros passos, estabelecimento de bases.' },
+            { emoji: '🌓', name: 'Lua Crescente', description: 'Crescimento, construção e fortalecimento de projetos.' },
+            { emoji: '🌔', name: 'Lua Gibosa Crescente', description: 'Refinamento, ajustes e preparação para o clímax.' },
+            { emoji: '🌕', name: 'Lua Cheia', description: 'Plenitude, manifestação e rituais de poder máximo.' },
+            { emoji: '🌖', name: 'Lua Gibosa Minguante', description: 'Gratidão, compartilhamento e reflexão.' },
+            { emoji: '🌗', name: 'Lua Minguante', description: 'Liberação, limpeza e banimento de energias negativas.' },
+            { emoji: '🌘', name: 'Lua Minguante Final', description: 'Descanso, renovação e preparação para o novo ciclo.' }
+        ];
+        
+        function getMoonPhase(date) {
+            // Simulação simplificada das fases lunares
+            const day = date.getDate();
+            const phaseIndex = Math.floor((day - 1) / 3.75) % 8;
+            return moonPhases[phaseIndex];
+        }
+        
+        function generateCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const calendarTitle = document.getElementById('calendarTitle');
+            
+            // Limpar calendário existente (manter cabeçalhos)
+            const dayHeaders = calendarGrid.querySelectorAll('.calendar-day-header');
+            calendarGrid.innerHTML = '';
+            dayHeaders.forEach(header => calendarGrid.appendChild(header));
+            
+            // Atualizar título
+            calendarTitle.textContent = `${months[currentMonth]} ${currentYear}`;
+            
+            // Primeiro dia do mês
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            // Gerar 42 dias (6 semanas)
+            for (let i = 0; i < 42; i++) {
+                const cellDate = new Date(startDate);
+                cellDate.setDate(startDate.getDate() + i);
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                // Verificar se é do mês atual
+                if (cellDate.getMonth() !== currentMonth) {
+                    dayElement.classList.add('other-month');
+                }
+                
+                // Verificar se é hoje
+                if (cellDate.toDateString() === new Date().toDateString()) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Adicionar fase da lua
+                const moonPhase = getMoonPhase(cellDate);
+                if ([0, 2, 4, 6].includes(Math.floor((cellDate.getDate() - 1) / 3.75) % 8)) {
+                    dayElement.classList.add('moon-day');
+                    dayElement.innerHTML = `
+                        <div>${cellDate.getDate()}</div>
+                        <div class="moon-symbol">${moonPhase.emoji}</div>
+                    `;
+                } else {
+                    dayElement.innerHTML = `<div>${cellDate.getDate()}</div>`;
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+        
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar();
+        }
+        
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar();
+        }
+        
+        function updateCurrentMoonInfo() {
+            const today = new Date();
+            const currentPhase = getMoonPhase(today);
+            
+            document.getElementById('currentMoonPhase').textContent = currentPhase.emoji;
+            document.getElementById('currentPhaseName').textContent = currentPhase.name;
+            document.getElementById('currentPhaseDescription').textContent = currentPhase.description;
+        }
+
+        // Função para voltar para a página do usuário
+        function goBackToUserDashboard() {
+            // Extrai o nome de usuário da URL atual (ex: /user/Melly/calendario.html)
+            const pathParts = window.location.pathname.split('/');
+            const userIndex = pathParts.indexOf('user');
+            let currentUsername = 'Melly'; // Fallback
+
+            if (userIndex !== -1 && pathParts.length > userIndex + 1) {
+                currentUsername = pathParts[userIndex + 1];
+            }
+            window.location.href = `/user/${currentUsername}`;
+        }
+        
+        // Inicializar calendário
+        generateCalendar();
+        updateCurrentMoonInfo();
+        
+        // Efeito de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.moon-info, .calendar-container, .phase-card');
+            elements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    element.style.transition = 'all 0.6s ease';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

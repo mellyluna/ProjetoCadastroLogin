@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grimório de Melly - Portal Sombrio</title>
+    <style>
+        /* (Seu CSS existente aqui) */
+
+        /* Adicione este CSS para o menu admin */
+        .admin-section {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: linear-gradient(145deg, #1a0d1a, #2d1b2d);
+            border: 2px solid #9932CC; /* Cor de destaque para admin */
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(153, 50, 204, 0.4);
+            display: none; /* Oculto por padrão */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .admin-section.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .admin-section h2 {
+            font-family: 'Nosifer', cursive;
+            color: #9932CC;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            text-shadow: 0 0 15px #9932CC;
+        }
+
+        .admin-section button {
+            background: linear-gradient(145deg, #9932CC, #7C2FB2);
+            color: #e6e6e6;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(153, 50, 204, 0.3);
+            margin: 0.5rem;
+        }
+
+        .admin-section button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(153, 50, 204, 0.5);
+        }
+
+        .admin-prompt {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-prompt input {
+            padding: 0.7rem;
+            border-radius: 8px;
+            border: 1px solid #9932CC;
+            background-color: #0d0d0d;
+            color: #e6e6e6;
+            font-family: 'Cinzel', serif;
+            width: 200px;
+        }
+
+        .admin-prompt input::placeholder {
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <header class="header">
+        <h1>Grimório de Melly</h1>
+        <p>Portal das Sombras • Domínio da Bruxa</p>
+    </header>
+    
+    <div class="container">
+        <div class="cards-grid">
+            <div class="card agenda-card" onclick="navigateTo('agenda.html')">
+                <div class="card-icon">🗓️</div>
+                <h3>Agenda Sombria</h3>
+                <p>Organize seus compromissos e rituais sob a luz da lua. Agende suas práticas místicas e eventos importantes.</p>
+            </div>
+            
+            <div class="card contatos-card" onclick="navigateTo('contatos.html')">
+                <div class="card-icon">📞</div>
+                <h3>Círculo de Contatos</h3>
+                <p>Mantenha conexão com seu coven e aliados. Guarde informações preciosas de seus companheiros das trevas.</p>
+            </div>
+            
+            <div class="card calendario-card" onclick="navigateTo('calendario.html')">
+                <div class="card-icon">🌙</div>
+                <h3>Calendário Lunar</h3>
+                <p>Acompanhe as fases da lua e datas sagradas. Planeje seus rituais conforme os ciclos celestiais.</p>
+            </div>
+            
+            <div class="card recados-card" onclick="navigateTo('recados.html')">
+                <div class="card-icon">📜</div>
+                <h3>Pergaminhos</h3>
+                <p>Anote suas mensagens e lembretes importantes. Guarde segredos e conhecimentos ancestrais.</p>
+            </div>
+            
+            <div class="card grimorio-card" onclick="navigateTo('grimorio.html')">
+                <div class="card-icon">📚</div>
+                <h3>Biblioteca Arcana</h3>
+                <p>Acesse seu conhecimento místico e feitiços. Consulte receitas de poções e encantamentos.</p>
+            </div>
+            
+            <div class="card rituais-card" onclick="navigateTo('rituais.html')">
+                <div class="card-icon">🕯️</div>
+                <h3>Altar dos Rituais</h3>
+                <p>Prepare e execute seus rituais sagrados. Mantenha registro de suas práticas espirituais.</p>
+            </div>
+        </div>
+
+        <div class="admin-section" id="adminAuthSection">
+            <h2>Acesso Administrativo</h2>
+            <p>Insira a senha de emergência para acessar as ferramentas de administração.</p>
+            <div class="admin-prompt">
+                <input type="password" id="adminPasswordInput" placeholder="Senha de Emergência">
+                <button onclick="authorizeAdmin()">Autorizar</button>
+            </div>
+            <p id="adminAuthMessage" style="color: #ff6347; margin-top: 1rem;"></p>
+        </div>
+
+        <div class="admin-section" id="adminMenu" style="display: none;">
+            <h2>Menu da Anciã</h2>
+            <p>Ferramentas exclusivas para a guardiã do Grimório.</p>
+            <div>
+                <button onclick="alert('Funcionalidade de Gerenciar Usuários')">Gerenciar Usuários</button>
+                <button onclick="alert('Funcionalidade de Auditoria de Logs')">Auditoria de Logs</button>
+                <button onclick="alert('Funcionalidade de Backup do Sistema')">Backup do Sistema</button>
+                </div>
+        </div>
+
+    </div>
+    
+    <footer class="footer">
+        <p>© 2025 Grimório de Melly • Que as sombras te protejam • ✨🔮✨</p>
+    </footer>
+    
+    <script>
+        // (Seu JavaScript existente aqui, incluindo a função navigateTo corrigida)
+
+        // Criar partículas flutuantes
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                
+                // Cores aleatórias entre vermelho e roxo
+                const colors = ['#8B0000', '#9932CC', '#4B0082', '#800080'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Função de navegação corrigida (a mesma que te passei anteriormente)
+        function navigateTo(page) {
+            const pathParts = window.location.pathname.split('/');
+            const userIndex = pathParts.indexOf('user');
+            let currentUsername = 'Melly'; // Fallback para o usuário Melly_index.html
+
+            if (userIndex !== -1 && pathParts.length > userIndex + 1) {
+                currentUsername = pathParts[userIndex + 1];
+            }
+
+            let targetUrl;
+            if (page.startsWith('http://') || page.startsWith('https://') || page.startsWith('/')) {
+                targetUrl = page;
+            } else {
+                targetUrl = `/user/${currentUsername}/${page}`;
+            }
+            
+            document.body.style.transition = 'opacity 0.5s ease';
+            document.body.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500);
+        }
+        
+        // Efeito de hover nos cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        
+        // Efeito de clique nos cards
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'translateY(-5px) scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                }, 150);
+            });
+        });
+        
+        // Inicializar partículas
+        createParticles();
+        
+        // Efeito de typing no título
+        const title = document.querySelector('.header h1');
+        const originalText = title.textContent;
+        title.textContent = '';
+        
+        let i = 0;
+        const typeWriter = () => {
+            if (i < originalText.length) {
+                title.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        };
+        
+        setTimeout(typeWriter, 1000);
+        
+        // Efeito de brilho aleatório nos ícones
+        setInterval(() => {
+            const icons = document.querySelectorAll('.card-icon');
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            randomIcon.style.textShadow = '0 0 30px #8B0000, 0 0 60px #8B0000';
+            
+            setTimeout(() => {
+                randomIcon.style.textShadow = '0 0 15px #8B0000';
+            }, 1000);
+        }, 3000);
+
+
+        // === NOVAS FUNÇÕES PARA A AUTORIZAÇÃO ADMIN ===
+        async function authorizeAdmin() {
+            const adminPasswordInput = document.getElementById('adminPasswordInput');
+            const adminAuthMessage = document.getElementById('adminAuthMessage');
+            const adminMenu = document.getElementById('adminMenu');
+            const adminAuthSection = document.getElementById('adminAuthSection');
+
+            const emergency_password = adminPasswordInput.value;
+            const username = 'Melly'; // Hardcoded para este exemplo, mas poderia vir de uma sessão/cookie
+
+            // Limpa a mensagem anterior
+            adminAuthMessage.textContent = '';
+            adminAuthMessage.style.color = '#ff6347'; // Cor padrão para erro
+
+            try {
+                const response = await fetch('http://localhost:5000/admin/autorizar_modificacao', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, emergency_password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    adminAuthMessage.textContent = data.message + ' Redirecionando para o painel...';
+                    adminAuthMessage.style.color = '#7CFC00'; // Verde para sucesso
+                    
+                    // Oculta a seção de autorização e mostra o menu admin
+                    adminAuthSection.classList.remove('visible');
+                    adminAuthSection.style.opacity = '0';
+                    adminAuthSection.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        adminAuthSection.style.display = 'none'; // Esconde completamente após a transição
+                        adminMenu.style.display = 'block';
+                        setTimeout(() => {
+                            adminMenu.classList.add('visible'); // Adiciona classe para animar
+                        }, 50); // Pequeno atraso para a transição funcionar
+                    }, 500); // Tempo da transição CSS
+                    
+                    // Opcional: Salvar em localStorage que Melly está autorizado
+                    localStorage.setItem('mellyAdminAuthorized', 'true');
+
+                } else {
+                    adminAuthMessage.textContent = data.message || 'Erro de autorização desconhecido.';
+                    // Opcional: Limpar senha em caso de erro
+                    adminPasswordInput.value = '';
+                }
+            } catch (error) {
+                console.error('Erro ao chamar a API de autorização:', error);
+                adminAuthMessage.textContent = 'Erro ao conectar com o servidor.';
+            }
+        }
+
+        // Verifica se Melly já está autorizado ao carregar a página (por exemplo, após login)
+        document.addEventListener('DOMContentLoaded', () => {
+            const adminMenu = document.getElementById('adminMenu');
+            const adminAuthSection = document.getElementById('adminAuthSection');
+            
+            // Supondo que você tem uma forma de saber se o usuário logado é "Melly"
+            // Por simplicidade, vamos usar o localStorage ou hardcode por agora
+            const isLoggedInMelly = true; // Substitua por sua lógica de verificação de login real
+            
+            if (isLoggedInMelly) { // Apenas mostra a seção de autorização se for Melly
+                adminAuthSection.style.display = 'block';
+                setTimeout(() => {
+                    adminAuthSection.classList.add('visible');
+                }, 50); // Pequeno atraso para a transição funcionar
+            }
+
+            // Se Melly já foi autorizado antes e salvou no localStorage
+            if (localStorage.getItem('mellyAdminAuthorized') === 'true' && isLoggedInMelly) {
+                adminAuthSection.style.display = 'none'; // Esconde a seção de autorização
+                adminAuthSection.classList.remove('visible'); // Remove a classe de transição para evitar flash
+                adminMenu.style.display = 'block'; // Mostra o menu admin diretamente
+                adminMenu.classList.add('visible');
+            }
+        });
+
+    </script>
+</body>
+</html>

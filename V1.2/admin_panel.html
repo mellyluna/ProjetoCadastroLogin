@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grimório de Melly - Painel Administrativo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Cinzel:wght@400;600&family=Nosifer&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a0d1a 0%, #2d1b2d 30%, #0d0d0d 100%);
+            min-height: 100vh;
+            font-family: 'Cinzel', serif;
+            color: #e6e6e6;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Alinha ao topo */
+            padding-top: 50px; /* Espaçamento do topo */
+        }
+        
+        /* Partículas flutuantes */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #8B0000;
+            border-radius: 50%;
+            animation: floatAndFade 15s infinite ease-in-out;
+            opacity: 0;
+        }
+        
+        @keyframes floatAndFade {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 800px; /* Limita a largura para melhor visualização */
+        }
+
+        h1 {
+            font-family: 'Nosifer', cursive;
+            font-size: 3.5em;
+            color: #ff00ff; /* Neon pink */
+            text-shadow: 
+                0 0 5px #ff00ff,
+                0 0 10px #ff00ff,
+                0 0 20px #ff00ff,
+                0 0 40px #ff00ff,
+                0 0 80px #ff00ff;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: neonPulse 1.5s infinite alternate;
+        }
+
+        @keyframes neonPulse {
+            from { text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff; }
+            to { text-shadow: 0 0 7px #ff00ff, 0 0 15px #ff00ff, 0 0 25px #ff00ff, 0 0 50px #ff00ff, 0 0 100px #ff00ff; }
+        }
+
+        .admin-section {
+            background-color: rgba(0, 0, 0, 0.6);
+            border: 2px solid #6a0dad; /* Dark purple */
+            box-shadow: 0 0 15px #6a0dad, 0 0 30px #6a0dad inset;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .admin-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .admin-section p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        .admin-input {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #6a0dad;
+            background-color: #2a0a2a;
+            color: #e6e6e6;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .admin-input::placeholder {
+            color: #999;
+        }
+
+        .btn {
+            background-color: #8a2be2; /* Blue violet */
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background-color: #9932cc; /* Medium purple */
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(138, 43, 226, 0.6);
+        }
+
+        .menu-anciam {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ff00ff; /* Neon pink */
+            box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff inset;
+            padding: 40px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 700px;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .menu-anciam.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: flex; /* Display as flex for buttons */
+        }
+
+        .menu-anciam h2 {
+            font-family: 'Nosifer', cursive;
+            font-size: 2.5em;
+            color: #9932cc; /* Medium purple */
+            text-shadow: 0 0 5px #9932cc, 0 0 10px #9932cc;
+            margin-bottom: 20px;
+        }
+
+        .menu-anciam p {
+            color: #e0e0e0;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: opacity 0.3s ease-out;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .message.success {
+            background-color: #28a745; /* Green */
+            color: white;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message.error {
+            background-color: #dc3545; /* Red */
+            color: white;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message.info {
+            background-color: #007bff; /* Blue */
+            color: white;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .user-list-section {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #4b0082;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            color: #eee;
+            text-align: left;
+            display: none; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .user-list-section.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        .user-list-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .user-list-section li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #6a0dad;
+            display: flex; /* To align text and button */
+            justify-content: space-between; /* Space between text and button */
+            align-items: center; /* Vertically center */
+        }
+
+        .user-list-section li:last-child {
+            border-bottom: none;
+        }
+
+        .delete-user-section {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #4b0082;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .delete-user-section.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        .delete-user-section select {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #6a0dad;
+            background-color: #2a0a2a;
+            color: #e6e6e6;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .delete-user-section select option {
+            background-color: #2a0a2a;
+            color: #e6e6e6;
+        }
+
+        /* Estilos para o grupo de botões de ações gerais */
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Estilos para o botão de apagar inline */
+        .btn-delete-inline {
+            background-color: #dc3545; /* Vermelho */
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px; /* Espaçamento à esquerda */
+        }
+
+        .btn-delete-inline:hover {
+            background-color: #c82333;
+        }
+
+        .back-to-main-btn {
+            background-color: #4b0082; /* Indigo */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(75, 0, 130, 0.4);
+            margin-top: 30px;
+            text-decoration: none;
+        }
+
+        .back-to-main-btn:hover {
+            background-color: #6a0dad;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+            .menu-anciam h2 {
+                font-size: 2em;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles"></div>
+
+    <div class="container">
+        <h1>Painel Administrativo</h1>
+        <p>Acesso restrito para gerenciamento de usuários.</p>
+
+        <div id="adminAuthSection" class="admin-section">
+            <p>Insira a senha de emergência para acessar as ferramentas administrativas:</p>
+            <input type="password" id="emergencyPassword" class="admin-input" placeholder="Senha de Emergência">
+            <button class="btn" id="authorizeBtn">Autorizar Acesso</button>
+            <div id="authMessage" class="message"></div>
+        </div>
+
+        <div id="adminMenu" class="menu-anciam">
+            <div class="button-group">
+                <button class="btn" id="listUsersBtn">Listar Usuários</button>
+                <button class="btn" id="deleteUserBtn">Apagar Usuário</button>
+            </div>
+            <div id="userListSection" class="user-list-section">
+                <h3>Usuários Cadastrados:</h3>
+                <ul id="userList">
+                    <li>Nenhum usuário encontrado.</li>
+                </ul>
+            </div>
+
+            <div id="deleteUserSection" class="delete-user-section">
+                <h3>Selecione um usuário para apagar:</h3>
+                <select id="selectUserToDelete">
+                    <option value="">Carregando usuários...</option>
+                </select>
+                <button class="btn" id="confirmDeleteBtn">Confirmar Exclusão</button>
+                <div id="deleteMessage" class="message"></div>
+            </div>
+
+            <div id="adminMessage" class="message"></div>
+        </div>
+
+        <!-- Botão para voltar à página principal de Melly -->
+        <a href="/user/Melly" class="back-to-main-btn">Voltar ao Grimório</a>
+
+    </div>
+
+    <script>
+        const emergencyPasswordInput = document.getElementById('emergencyPassword');
+        const authorizeBtn = document.getElementById('authorizeBtn');
+        const authMessage = document.getElementById('authMessage');
+        const adminAuthSection = document.getElementById('adminAuthSection');
+        const adminMenu = document.getElementById('adminMenu');
+        const listUsersBtn = document.getElementById('listUsersBtn');
+        const deleteUserBtn = document.getElementById('deleteUserBtn');
+        const userListSection = document.getElementById('userListSection');
+        const userList = document.getElementById('userList');
+        const deleteUserSection = document.getElementById('deleteUserSection');
+        const selectUserToDelete = document.getElementById('selectUserToDelete');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const deleteMessage = document.getElementById('deleteMessage');
+        const adminMessage = document.getElementById('adminMessage');
+
+        let mellyIsAdminAuthorized = false; // Sempre começar como falso
+
+        // Função para exibir mensagens
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `message ${type}`;
+            setTimeout(() => {
+                element.classList.remove('visible'); // Remove a classe para esconder gradualmente
+                setTimeout(() => {
+                    element.textContent = '';
+                    element.className = 'message';
+                }, 300); // Espera a transição terminar antes de limpar
+            }, 5000); // Mensagem some após 5 segundos
+            setTimeout(() => {
+                element.classList.add('visible'); // Adiciona a classe para aparecer gradualmente
+            }, 50); // Pequeno delay para a transição funcionar
+        }
+
+        // Função para listar usuários
+        async function listUsers() {
+            hideAllAdminSections();
+            userListSection.classList.add('visible');
+            userList.innerHTML = '<li>Carregando usuários...</li>';
+            adminMessage.className = 'message'; // Limpa mensagens anteriores
+
+            try {
+                const response = await fetch('http://localhost:5000/admin/list_users', { 
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+                console.log("Dados recebidos do backend (listUsers):", data); // LOG PARA DEPURAR
+
+                if (data.success) {
+                    userList.innerHTML = ''; // Limpa a lista
+                    if (data.users && data.users.length > 0) {
+                        data.users.forEach(user => {
+                            console.log("Objeto de usuário individual (listUsers):", user); // LOG PARA DEPURAR
+                            const li = document.createElement('li');
+                            const createdAtDate = user.created_at ? new Date(user.created_at).toLocaleString() : 'N/A';
+                            
+                            // Cria um span para o texto do usuário
+                            const userTextSpan = document.createElement('span');
+                            userTextSpan.textContent = `Usuário: ${user.username || 'N/A'}, Email: ${user.email || 'N/A'}, Cadastro: ${createdAtDate}`;
+                            li.appendChild(userTextSpan);
+
+                            // Cria o botão de apagar para cada usuário
+                            const deleteButton = document.createElement('button');
+                            deleteButton.textContent = 'APAGAR';
+                            deleteButton.className = 'btn-delete-inline'; // Nova classe para estilizar
+                            deleteButton.onclick = async () => {
+                                // Confirmação de exclusão
+                                if (confirm(`Tem certeza que deseja apagar o usuário '${user.username}'? Esta ação é irreversível!`)) {
+                                    try {
+                                        const deleteResponse = await fetch('http://localhost:5000/admin/delete_user', {
+                                            method: 'DELETE',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                            body: JSON.stringify({ username_to_delete: user.username }),
+                                        });
+                                        const deleteData = await deleteResponse.json();
+                                        if (deleteData.success) {
+                                            showMessage(adminMessage, deleteData.message, 'success');
+                                            listUsers(); // Recarrega a lista após a exclusão
+                                        } else {
+                                            showMessage(adminMessage, `Erro ao apagar: ${deleteData.message}`, 'error');
+                                        }
+                                    } catch (deleteError) {
+                                        console.error('Erro na requisição de deleção:', deleteError);
+                                        showMessage(adminMessage, 'Erro de conexão ao apagar usuário.', 'error');
+                                    }
+                                }
+                            };
+                            li.appendChild(deleteButton);
+
+                            userList.appendChild(li);
+                        });
+                        showMessage(adminMessage, 'Usuários carregados com sucesso!', 'success');
+                    } else {
+                        userList.innerHTML = '<li>Nenhum usuário cadastrado.</li>';
+                        showMessage(adminMessage, 'Nenhum usuário cadastrado.', 'info');
+                    }
+                } else {
+                    userList.innerHTML = '<li>Erro ao listar usuários.</li>';
+                    showMessage(adminMessage, `Erro ao listar usuários: ${data.message || 'Erro desconhecido'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Erro na requisição de listar usuários:', error);
+                userList.innerHTML = '<li>Erro de conexão ou servidor.</li>';
+                showMessage(adminMessage, 'Erro de conexão ou servidor ao listar usuários.', 'error');
+            }
+        }
+
+        // Função para preencher o select de deletar usuário (mantida para compatibilidade, mas o botão inline é melhor)
+        async function listUsersForDeleteSelect() {
+            selectUserToDelete.innerHTML = '<option value="">Carregando usuários...</option>';
+            try {
+                const response = await fetch('http://localhost:5000/admin/list_users', { 
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+                console.log("Dados recebidos do backend (listUsersForDeleteSelect):", data); // LOG PARA DEPURAR
+
+                if (data.success) {
+                    selectUserToDelete.innerHTML = '<option value="">Selecione um usuário</option>'; // Limpa e adiciona opção padrão
+                    if (data.users && data.users.length > 0) {
+                        data.users.forEach(user => {
+                            const option = document.createElement('option');
+                            option.value = user.username;
+                            option.textContent = user.username;
+                            selectUserToDelete.appendChild(option);
+                        });
+                    } else {
+                        selectUserToDelete.innerHTML = '<option value="">Nenhum usuário encontrado</option>';
+                    }
+                } else {
+                    selectUserToDelete.innerHTML = '<option value="">Erro ao carregar usuários</option>';
+                    console.error('Erro ao carregar usuários para deleção:', data.message);
+                }
+            } catch (error) {
+                selectUserToDelete.innerHTML = '<option value="">Erro de conexão</option>';
+                console.error('Erro de conexão ao carregar usuários para deleção:', error);
+            }
+        }
+
+        // Função para deletar usuário (agora chamada pelo botão inline também)
+        async function deleteSelectedUser() {
+            const usernameToDelete = selectUserToDelete.value;
+            if (!usernameToDelete) {
+                showMessage(deleteMessage, 'Por favor, selecione um usuário para apagar.', 'info');
+                return;
+            }
+
+            if (!confirm(`Tem certeza que deseja apagar o usuário '${usernameToDelete}'? Esta ação é irreversível!`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/admin/delete_user', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username_to_delete: usernameToDelete }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage(deleteMessage, data.message, 'success');
+                    listUsersForDeleteSelect(); // Atualiza a lista após a exclusão
+                    listUsers(); // Atualiza a lista geral de usuários também
+                } else {
+                    showMessage(deleteMessage, `Erro: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Erro na requisição de deletar usuário:', error);
+                showMessage(deleteMessage, 'Erro de conexão ou servidor ao deletar usuário.', 'error');
+            }
+        }
+
+
+        // Esconde todas as seções administrativas (lista de usuários, apagar)
+        function hideAllAdminSections() {
+            userListSection.classList.remove('visible');
+            deleteUserSection.classList.remove('visible');
+            // Limpa as mensagens quando esconde a seção
+            adminMessage.className = 'message'; 
+            deleteMessage.className = 'message';
+        }
+
+        // Event Listeners
+        authorizeBtn.addEventListener('click', async () => {
+            const emergencyPassword = emergencyPasswordInput.value;
+            if (!emergencyPassword) {
+                showMessage(authMessage, 'Por favor, insira a senha de emergência.', 'info');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/admin/autorizar_modificacao', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: 'Melly', emergency_password: emergencyPassword }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage(authMessage, data.message, 'success');
+                    // Não armazenamos mais no localStorage para forçar a senha sempre
+                    localStorage.removeItem('mellyAdminAuthorized'); 
+                    mellyIsAdminAuthorized = true;
+                    adminAuthSection.classList.remove('visible');
+                    setTimeout(() => {
+                        adminAuthSection.style.display = 'none';
+                        adminMenu.style.display = 'flex'; // Exibe o menu
+                        setTimeout(() => {
+                            adminMenu.classList.add('visible');
+                        }, 50);
+                    }, 500); // Espera a transição de saída
+                } else {
+                    showMessage(authMessage, data.message, 'error');
+                    // Se falhar, garante que não está autorizado
+                    localStorage.removeItem('mellyAdminAuthorized'); 
+                    mellyIsAdminAuthorized = false;
+                }
+            } catch (error) {
+                console.error('Erro na requisição de autorização:', error);
+                showMessage(authMessage, 'Erro de conexão ou servidor.', 'error');
+            }
+        });
+
+        listUsersBtn.addEventListener('click', listUsers);
+
+        deleteUserBtn.addEventListener('click', () => {
+            hideAllAdminSections();
+            deleteUserSection.classList.add('visible');
+            listUsersForDeleteSelect(); // Popula o select ao abrir a seção de deleção
+            deleteMessage.className = 'message'; // Limpa mensagens anteriores
+        });
+
+        confirmDeleteBtn.addEventListener('click', deleteSelectedUser);
+
+        // Lógica de inicialização para admin_panel.html
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verifica se o usuário logado é Melly (para garantir que esta página só seja acessada por ele)
+            // Isso é uma medida de segurança adicional no frontend, mas o backend também deve validar.
+            const currentUser = localStorage.getItem('currentUser'); // Assume que o username está no localStorage após o login
+            if (currentUser !== 'Melly') {
+                alert('Acesso negado. Você não tem permissão para acessar esta página.');
+                window.location.href = '/auth.html'; // Redireciona para o login
+                return;
+            }
+
+            // Se Melly está logado, verifica o status de autorização no localStorage
+            if (localStorage.getItem('mellyAdminAuthorized') === 'true') {
+                mellyIsAdminAuthorized = true; // Define a variável JS
+                adminAuthSection.style.display = 'none'; // Esconde a seção de autorização
+                adminAuthSection.classList.remove('visible'); 
+                adminMenu.style.display = 'flex'; // Mostra o menu admin diretamente
+                adminMenu.classList.add('visible');
+            } else {
+                // Se Melly não está autorizado, mostra a seção de autorização
+                adminAuthSection.style.display = 'block';
+                setTimeout(() => {
+                    adminAuthSection.classList.add('visible');
+                }, 50); 
+            }
+            // Inicializar partículas
+            const particlesContainer = document.querySelector('.particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                particle.style.animationDuration = `${10 + Math.random() * 10}s`;
+                particlesContainer.appendChild(particle);
+            }
+        });
+
+    </script>
+</body>
+</html>

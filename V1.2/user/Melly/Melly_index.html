@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grimório de Melly - Portal Sombrio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Cinzel:wght@400;600&family=Nosifer&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a0d1a 0%, #2d1b2d 30%, #0d0d0d 100%);
+            min-height: 100vh;
+            font-family: 'Cinzel', serif;
+            color: #e6e6e6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Partículas flutuantes */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #8B0000;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: float 10s infinite ease-in-out;
+            box-shadow: 0 0 8px #8B0000;
+            z-index: 2;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.8; }
+            25% { transform: translateY(-20px) translateX(10px) rotate(90deg); opacity: 0.7; }
+            50% { transform: translateY(0) translateX(0) rotate(180deg); opacity: 0.9; }
+            75% { transform: translateY(20px) translateX(-10px) rotate(270deg); opacity: 0.7; }
+            100% { transform: translateY(0) translateX(0) rotate(360deg); opacity: 0.8; }
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom: 2px solid #8B0000;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header h1 {
+            font-family: 'Nosifer', cursive;
+            font-size: 2.5rem;
+            color: #8B0000;
+            text-shadow: 0 0 15px #8B0000;
+            transition: text-shadow 0.5s ease;
+        }
+        
+        .header p {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: #bbb;
+            margin-top: 0.5rem;
+        }
+        
+        /* Container principal */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            z-index: 5;
+            position: relative;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            justify-content: center;
+            align-items: stretch;
+        }
+        
+        /* Estilo dos cards */
+        .card {
+            background: linear-gradient(145deg, #1a0d1a, #2d1b2d);
+            border: 2px solid #8B0000;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 20px rgba(139, 0, 0, 0.7);
+            border-color: #CC0000;
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #e6e6e6;
+            text-shadow: 0 0 15px #8B0000;
+            transition: text-shadow 0.3s ease;
+        }
+        
+        .card h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: #e6e6e6;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card p {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            color: #bbb;
+            line-height: 1.5;
+            flex-grow: 1; /* Permite que o parágrafo ocupe espaço disponível */
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-top: 2px solid #8B0000;
+            color: #bbb;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Estilo para o botão de acesso administrativo */
+        .admin-access-btn {
+            background-color: #8a2be2; /* Azul violeta */
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+            margin-top: 2rem;
+            display: none; /* Escondido por padrão, só aparece para Melly */
+            text-decoration: none; /* Para o link */
+        }
+
+        .admin-access-btn:hover {
+            background-color: #9932cc; /* Roxo médio */
+            transform: translateY(-2px);
+        }
+
+        .admin-access-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(138, 43, 226, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .header p {
+                font-size: 1rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            .card-icon {
+                font-size: 2.5rem;
+            }
+            .card h3 {
+                font-size: 1.3rem;
+            }
+            .card p {
+                font-size: 0.9rem;
+            }
+            .admin-access-btn {
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <header class="header">
+        <h1>Grimório de Melly</h1>
+        <p>Portal das Sombras • Domínio da Bruxa</p>
+    </header>
+    
+    <div class="container">
+        <div class="cards-grid">
+            <div class="card agenda-card" onclick="navigateTo('agenda.html')">
+                <div class="card-icon">🗓️</div>
+                <h3>Agenda Sombria</h3>
+                <p>Organize seus compromissos e rituais sob a luz da lua. Agende suas práticas místicas e eventos importantes.</p>
+            </div>
+            
+            <div class="card contatos-card" onclick="navigateTo('contatos.html')">
+                <div class="card-icon">📞</div>
+                <h3>Círculo de Contatos</h3>
+                <p>Mantenha conexão com seu coven e aliados. Guarde informações preciosas de seus companheiros das trevas.</p>
+            </div>
+            
+            <div class="card calendario-card" onclick="navigateTo('calendario.html')">
+                <div class="card-icon">🌙</div>
+                <h3>Calendário Lunar</h3>
+                <p>Acompanhe as fases da lua e datas sagradas. Planeje seus rituais conforme os ciclos celestiais.</p>
+            </div>
+            
+            <div class="card recados-card" onclick="navigateTo('recados.html')">
+                <div class="card-icon">📜</div>
+                <h3>Pergaminhos</h3>
+                <p>Anote suas mensagens e lembretes importantes. Guarde segredos e conhecimentos ancestrais.</p>
+            </div>
+            
+            <div class="card grimorio-card" onclick="navigateTo('grimorio.html')">
+                <div class="card-icon">📚</div>
+                <h3>Biblioteca Arcana</h3>
+                <p>Acesse seu conhecimento místico e feitiços. Consulte receitas de poções e encantamentos.</p>
+            </div>
+            
+            <div class="card rituais-card" onclick="navigateTo('rituais.html')">
+                <div class="card-icon">🕯️</div>
+                <h3>Altar dos Rituais</h3>
+                <p>Prepare e execute seus rituais sagrados. Mantenha registro de suas práticas espirituais.</p>
+            </div>
+        </div>
+
+        <!-- Botão de Acesso Administrativo (visível apenas para Melly) -->
+        <a href="/admin_panel.html" id="adminAccessBtn" class="admin-access-btn">Acesso Administrativo</a>
+
+    </div>
+    
+    <footer class="footer">
+        <p>© 2025 Grimório de Melly • Que as sombras te protejam • ✨🔮✨</p>
+    </footer>
+    
+    <script>
+        // Criar partículas flutuantes
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                
+                // Cores aleatórias entre vermelho e roxo
+                const colors = ['#8B0000', '#9932CC', '#4B0082', '#800080'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Função de navegação corrigida
+        function navigateTo(page) {
+            const pathParts = window.location.pathname.split('/');
+            const userIndex = pathParts.indexOf('user');
+            let currentUsername = ''; 
+
+            if (userIndex !== -1 && pathParts.length > userIndex + 1) {
+                currentUsername = pathParts[userIndex + 1];
+                if (currentUsername.endsWith('_index.html')) {
+                    currentUsername = currentUsername.replace('_index.html', '');
+                }
+            } else {
+                // Fallback para Melly se não encontrar username na URL (ex: acessando Melly_index.html diretamente)
+                currentUsername = 'Melly'; 
+            }
+
+            let targetUrl;
+            if (page.startsWith('http://') || page.startsWith('https://') || page.startsWith('/')) {
+                targetUrl = page; // Se já for um caminho absoluto ou URL completa
+            } else {
+                // Constrói a URL corretamente: /user/nome_do_usuario/pagina.html
+                targetUrl = `/user/${currentUsername}/${page}`;
+            }
+            
+            document.body.style.transition = 'opacity 0.5s ease';
+            document.body.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500);
+        }
+        
+        // Efeito de hover nos cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        
+        // Efeito de clique nos cards
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'translateY(-5px) scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                }, 150);
+            });
+        });
+        
+        // Inicializar partículas
+        createParticles();
+        
+        // Efeito de typing no título
+        const title = document.querySelector('.header h1');
+        const originalText = title.textContent;
+        title.textContent = '';
+        
+        let i = 0;
+        const typeWriter = () => {
+            if (i < originalText.length) {
+                title.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        };
+        
+        setTimeout(typeWriter, 1000);
+        
+        // Efeito de brilho aleatório nos ícones
+        setInterval(() => {
+            const icons = document.querySelectorAll('.card-icon');
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            randomIcon.style.textShadow = '0 0 30px #8B0000, 0 0 60px #8B0000';
+            
+            setTimeout(() => {
+                randomIcon.style.textShadow = '0 0 15px #8B0000';
+            }, 1000);
+        }, 3000);
+
+        // Lógica para mostrar o botão "Acesso Administrativo" apenas para Melly
+        document.addEventListener('DOMContentLoaded', () => {
+            const adminAccessBtn = document.getElementById('adminAccessBtn');
+            const pathParts = window.location.pathname.split('/');
+            let currentLoggedInUsername = '';
+            
+            for (let i = 0; i < pathParts.length; i++) {
+                if (pathParts[i] === 'user' && i + 1 < pathParts.length) {
+                    currentLoggedInUsername = pathParts[i + 1];
+                    if (currentLoggedInUsername.endsWith('_index.html')) {
+                        currentLoggedInUsername = currentLoggedInUsername.replace('_index.html', '');
+                    }
+                    break;
+                }
+            }
+
+            if (currentLoggedInUsername === 'Melly') {
+                adminAccessBtn.style.display = 'inline-block'; // Mostra o botão
+            } else {
+                adminAccessBtn.style.display = 'none'; // Garante que esteja escondido para outros usuários
+            }
+        });
+
+        // Funções de logout e refresh (mantidas aqui para a página principal)
+        function logout() {
+            if (confirm('Deseja realmente sair?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = '/auth.html';
+            }
+        }
+
+        function refreshPage() {
+            window.location.reload();
+        }
+
+        // Verifica se o usuário está logado ao carregar a página (para a página principal)
+        window.addEventListener('load', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const pathParts = window.location.pathname.split('/');
+            let urlUsername = '';
+            
+            for (let i = 0; i < pathParts.length; i++) {
+                if (pathParts[i] === 'user' && i + 1 < pathParts.length) {
+                    urlUsername = pathParts[i + 1];
+                    if (urlUsername.endsWith('_index.html')) {
+                        urlUsername = urlUsername.replace('_index.html', '');
+                    }
+                    break;
+                }
+            }
+
+            if (!currentUser || currentUser !== urlUsername) {
+                alert('Sessão expirada ou usuário incorreto. Redirecionando para login...');
+                window.location.href = '/auth.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo, Teste3!</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #000000 0%, #2d1b69 50%, #8B008B 100%);
+            color: #ccc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 0, 139, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 60px rgba(139, 0, 139, 0.2);
+        }
+        h1 {
+            color: #8B008B;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #FFFFFF;
+        }
+        .btn {
+            background: linear-gradient(135deg, #8B008B 0%, #FF0000 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 12px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(139, 0, 139, 0.3);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(139, 0, 139, 0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 15px rgba(139, 0, 139, 0.6);
+        }
+        .welcome-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(139, 0, 139, 0.2);
+        }
+        .welcome-info p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .welcome-info strong {
+            color: #8B008B;
+        }
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .folder-info {
+            background: rgba(139, 0, 139, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid rgba(139, 0, 139, 0.2);
+        }
+        .folder-info h3 {
+            color: #8B008B;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Olá, Teste3!</h1>
+        <p>Bem-vindo ao seu painel personalizado! Você fez login com sucesso.</p>
+        
+        <div class="folder-info">
+            <h3>📁 Sua Pasta Pessoal</h3>
+            <p>Esta página está localizada em: <strong>user/Teste3/Teste3_index.html</strong></p>
+            <p>Você tem sua própria pasta exclusiva para arquivos e conteúdos!</p>
+        </div>
+        
+        <div class="welcome-info">
+            <p><strong>Usuário:</strong> Teste3</p>
+            <p><strong>Email:</strong> Não informado</p>
+            <p><strong>Data de acesso:</strong> 06/07/2025 às 23:26:05</p>
+            <p><strong>Status:</strong> Conectado</p>
+            <p><strong>Pasta:</strong> user/Teste3/</p>
+        </div>
+        <div class="actions">
+            <button onclick="logout()" class="btn">Sair</button>
+            <button onclick="refreshPage()" class="btn" style="background: linear-gradient(135deg, #FF0000 0%, #8B008B 100%);">Atualizar</button>
+            <a href="calendario.html" class="btn" style="background: linear-gradient(135deg, #0044cc 0%, #00ccff 100%);">Calendário</a>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            if (confirm('Deseja realmente sair?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = '/auth.html';
+            }
+        }
+
+        function refreshPage() {
+            window.location.reload();
+        }
+
+        // Verificar se o usuário está logado
+        window.addEventListener('load', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser || currentUser !== 'Teste3') {
+                alert('Sessão expirada. Redirecionando para login...');
+                window.location.href = '/auth.html';
+            }
+        });
+    </script>
+</body>
+</html>
